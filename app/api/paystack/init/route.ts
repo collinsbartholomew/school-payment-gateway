@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-// import prisma from '../../../lib/prisma';
+import prisma from '../../../lib/prisma';
 import logger from '../../../lib/logger';
 
 const InitSchema = z.object({
@@ -48,15 +48,15 @@ export async function POST(request: Request) {
 		
 		const { authorization_url, reference, access_code } = paystackData.data
 		
-		// await prisma.payment.create({
-		// 	data: {
-		// 		userId: user.id,
-		// 		amount: amount * 100,
-		// 		currency,
-		// 		reference,
-		// 		status: 'pending',
-		// 	},
-		// });
+		await prisma.payment.create({
+			data: {
+				userId: user.id,
+				amount: amount * 100,
+				currency,
+				reference,
+				status: 'pending',
+			},
+		});
 		
 		logger.info(`Initialized transaction for user ${user.id}, reference ${reference}`)
 		

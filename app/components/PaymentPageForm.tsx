@@ -1,20 +1,20 @@
 'use client'
 
-import React, {useState} from 'react'
+import React, { useState} from 'react'
 import Link from "next/link";
+
 
 type Props = {}
 
 export   default function PaymentPageForm({}: Props){
 	const [formData, setFormData] = useState({
-		fullName: 'Student-1',
-		studentId: 'Student-1-ID',
-		grade: 'SSS-3',
-		email: 'studentemail@example.com',
-		phone: '09123456789',
+		fullName: '',
+		studentId: '',
+		grade: '',
+		email: '',
+		phone: '',
 		dob: '',
-		session: '2025',
-		term: 'THIRD-TERM',
+		session: '',
 		consent: false,
 	});
 	

@@ -1,7 +1,7 @@
 // app/api/paystack/customer/route.ts
 import {NextResponse} from 'next/server';
 import {z} from 'zod';
-// import prisma from '../../../lib/prisma';
+import prisma from '../../../lib/prisma';
 import logger from '../../../lib/logger';
 
 const CreateCustomerSchema = z.object({
@@ -42,10 +42,10 @@ export async function POST(request: Request) {
 		}
 		const {customer_code} = resData.data;
 		
-		// await prisma.user.update({
-		// 	where: {id: user.id},
-		// 	data: {paystackCustomerId: customer_code},
-		// });
+		await prisma.user.update({
+			where: {id: user.id},
+			data: {paystackCustomerId: customer_code},
+		});
 		
 		logger.info(`Created customer ${customer_code} for ${email}`);
 		return NextResponse.json({success: true, customer_code});

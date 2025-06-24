@@ -82,10 +82,10 @@ export async function POST(request: Request) {
 				throw new Error(custData.message || 'Customer creation failed');
 			}
 			const {customer_code} = custData.data;
-			// await prisma.user.update({
-			// 	where: {id: user.id},
-			// 	data: {paystackCustomerId: customer_code},
-			// });
+			await prisma.user.update({
+				where: {id: user.id},
+				data: {paystackCustomerId: customer_code},
+			});
 			user = {...user, paystackCustomerId: customer_code};
 			logger.info(`Created customer for ${email} (code: ${customer_code})`);
 		}

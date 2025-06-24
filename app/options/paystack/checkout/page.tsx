@@ -26,7 +26,6 @@ export default function CheckoutPage() {
 			
 			const data = await res.json();
 			
-			
 			if (!(window as any).PaystackPop) {
 				throw new Error('Paystack script not loaded');
 			}
@@ -43,6 +42,7 @@ export default function CheckoutPage() {
 					});
 					
 					const verifyData = await verifyRes.json();
+					
 					if (verifyData.status === 'success') {
 						setStatus('success');
 						setMessage('Payment successful! Reference: ' + response.reference);

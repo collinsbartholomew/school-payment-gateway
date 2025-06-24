@@ -1,6 +1,6 @@
 // app/api/paystack/webhook/route.ts
 import { NextResponse } from 'next/server';
-// import prisma from '../../../lib/prisma';
+import prisma from '../../../lib/prisma';
 import logger from '../../../lib/logger';
 import { verifyPaystackSignature } from '../../../lib/verifyPaystackSignature';
 
@@ -36,10 +36,10 @@ export async function POST(request: Request) {
 		} else if (eventType === 'invoice.update') {
 			// Update nextPaymentDate for the subscription invoice
 			const code = data.subscription.subscription_code;
-			// await prisma.subscription.updateMany({
-			// 	where: { subscriptionCode: code },
-			// 	data: { nextPaymentDate: new Date(data.next_payment_date) },
-			// });
+			await prisma.subscription.updateMany({
+				where: { subscriptionCode: code },
+				data: { nextPaymentDate: new Date(data.next_payment_date) },
+			});
 			logger.info(`Webhook: invoice.update for subscription ${code}`);
 		}
 		
