@@ -4,27 +4,19 @@ import prisma from '../../../lib/prisma';
 import logger from '../../../lib/logger';
 
 const InitSchema = z.object({
-	
 	email: z.string().email(),
 	amount: z.number().positive(),
 	currency: z.string().default('NGN'),
 	subaccount: z.string().optional(),
-	
 });
 
 export async function POST(request: Request) {
 	try {
-		
 		const body = await request.json();
 		const { email, amount, currency, subaccount } = InitSchema.parse(body);
 		
-		console.log(InitSchema.parse(body))
-		
-		let user = await prisma.user.findUnique({ where: { email } });
-		
-		
-		if (!user) throw new Error('invlaid user')
-		
+		const user = await prisma.user.findUnique({ where: { email } });
+		if (!user) throw new Error('Invalid user');
 		
 		const paystackRes = await fetch('https://api.paystack.co/transaction/initialize', {
 			method: 'POST',
@@ -34,33 +26,21 @@ export async function POST(request: Request) {
 			},
 			body: JSON.stringify({
 				email,
-				amount: amount * 100, // Paystack expects amount in kobo
+				amount: amount * 100,
 				currency,
 				...(subaccount && { subaccount }),
 			}),
-		})
+		});
 		
-		const paystackData = await paystackRes.json()
+		const paystackData = await paystackRes.json();
 		
 		if (!paystackData.status) {
-			throw new Error(paystackData.message || 'Payment initialization failed')
+			throw new Error(paystackData.message || 'Payment initialization failed');
 		}
 		
-		const { authorization_url, reference, access_code } = paystackData.data
+		const { reference } = paystackData.data;
 		
-		// await prisma.payment.create({
-		// 	data: {
-		// 		userId: user.id,
-		// 		amount: amount * 100,
-		// 		reference,
-		// 		status: 'pending',
-		// 	},
-		// });
-		
-		// logger.info(`Initialized transaction for user ${user.id}, reference ${reference}`)
-		
-		return NextResponse.json({ authorization_url, reference, access_code });
-		
+		return NextResponse.json({ reference });
 	} catch (error: any) {
 		logger.error(`Init Transaction Error: ${error.message}`);
 		return NextResponse.json({ error: error.message }, { status: 400 });

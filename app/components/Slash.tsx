@@ -7,6 +7,6 @@ type Props = {}
 
 export default function Slash({}: Props){
 	return(
-		<section className="absolute self-center w-full h-[40vh] -skew-y-30 bg-blue-400"/>
+		<div className="absolute self-center w-full h-[40vh] -skew-y-30 bg-blue-400"/>
 	)
 }

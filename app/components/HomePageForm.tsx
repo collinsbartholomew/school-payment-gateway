@@ -35,7 +35,7 @@ export default function HomePageForm() {
 	};
 	
 	return (
-		<section className="z-5 self-center w-full h-100 mx-5 px-5 py-10 rounded-xl border border-gray-200 text-center backdrop-blur-3xl">
+		<section className="z-5 self-center w-full md:w-[50%] h-100 mx-5 px-5 py-10 rounded-xl border border-gray-200 text-center backdrop-blur-3xl">
 			<form onSubmit={handleSubmit} className="relative flex flex-col justify-center gap-10 items-center w-full h-full">
 				<h2 aria-live="polite" className="absolute top-5 font-bold uppercase text-sm">
 					Your payments are end-to-end secured
@@ -62,7 +62,7 @@ export default function HomePageForm() {
 				<button
 					type="submit"
 					disabled={loading}
-					className="absolute bottom-0 w-[50%] bg-blue-600 p-1 rounded-full text-lg font-bold text-gray-200 drop-shadow-sm disabled:opacity-60"
+					className="absolute cursor-pointer bottom-0 w-[50%] bg-blue-600 p-1 rounded-full text-lg font-bold text-gray-200 drop-shadow-sm disabled:opacity-60"
 				>
 					{loading ? 'Logging in...' : 'Submit'}
 				</button>

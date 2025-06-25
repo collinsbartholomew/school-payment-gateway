@@ -85,7 +85,7 @@ export default function PaymentPageForm({ user }: { user: User }) {
 	};
 	
 	return (
-		<div className="z-10 self-center h-130 min-h-[80vh] w-full mx-5 px-5 py-5 mt-10 md:mt-50 -mx-auto rounded-xl border border-gray-200 items-center justify-center overflow-y-scroll text-center backdrop-blur-3xl">
+		<div className="z-10 relative self-center min-h-130 h-[80vh] w-full md:w-200 mx-5 px-5 py-5 mt-10 -mx-auto rounded-xl border border-gray-200 items-center justify-center overflow-y-scroll text-center backdrop-blur-3xl">
 			<form onSubmit={handleSubmit} className="max-w-2xl mx-auto py-6 bg-blue/50 rounded-2xl space-y-6">
 				<h2 className="text-2xl font-semibold text-gray-300">Student Verification</h2>
 				
@@ -115,7 +115,7 @@ export default function PaymentPageForm({ user }: { user: User }) {
 					<h3 className="font-bold text-white py-3 text-xl">Payment Options</h3>
 					<div className="flex flex-col gap-3">
 						{Object.entries(feeAmounts).map(([id, amount]) => (
-							<label key={id} htmlFor={id} className="flex gap-2 relative w-full items-center justify-start border rounded-full px-5 border-gray-300">
+							<label key={id} htmlFor={id} className="flex cursor-pointer hover:bg-blue-900/30 gap-2 relative w-full items-center justify-start border rounded-full px-5 border-gray-300">
 								<input
 									type="checkbox"
 									name={id}

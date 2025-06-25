@@ -11,15 +11,12 @@ export default function CheckoutPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	
-	// Read params from URL
 	const emailParam = searchParams.get('email');
 	const amountParam = searchParams.get('amount');
 	
-	// Local state
 	const [status, setStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
 	const [message, setMessage] = useState('');
 	
-	// If required params are missing, send them back home
 	useEffect(() => {
 		if (!emailParam || !amountParam) {
 			router.replace('/');
@@ -32,8 +29,7 @@ export default function CheckoutPage() {
 		setMessage('');
 		
 		try {
-			// Call your init API with the dynamic params
-			const res = await fetch('/api/paystack/init/', {
+			const res = await fetch('/api/paystack/init', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -49,41 +45,40 @@ export default function CheckoutPage() {
 			
 			const data = await res.json();
 			
-			// Ensure the Paystack script is loaded
 			if (!(window as any).PaystackPop) {
 				throw new Error('Paystack script not loaded');
 			}
 			
-			const handler = (window as any).PaystackPop.setup
-				? (window as any).PaystackPop.setup({
-					key: data.access_code,
-					email: emailParam,
-					amount: Number(amountParam) * 100, // kobo
-					onSuccess: async (response: any) => {
-						const verifyRes = await fetch('/api/paystack/verify', {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify({ reference: response.reference }),
-						});
-						const verifyData = await verifyRes.json();
-						if (verifyData.status === 'success') {
-							setStatus('success');
-							setMessage('Payment successful! Reference: ' + response.reference);
-						} else {
-							setStatus('error');
-							setMessage('Payment verification failed.');
-						}
-					},
-					onClose: () => {
-						setStatus('idle');
-						setMessage('Payment canceled.');
-					},
-				})
-				: null;
+			const handler = (window as any).PaystackPop.setup({
+				key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+				email: emailParam,
+				amount: Number(amountParam) * 100,
+				currency: 'NGN',
+				reference: data.reference,
+				onSuccess: async (response: any) => {
+					const verifyRes = await fetch('/api/paystack/verify', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ reference: response.reference }),
+					});
+					
+					const verifyData = await verifyRes.json();
+					
+					if (verifyData.status === 'success') {
+						setStatus('success');
+						setMessage('Payment successful! Reference: ' + response.reference);
+					} else {
+						setStatus('error');
+						setMessage('Payment verification failed.');
+					}
+				},
+				onClose: () => {
+					setStatus('idle');
+					setMessage('Payment canceled.');
+				},
+			});
 			
-			if (!handler) throw new Error('Unable to initialize Paystack handler');
-			
-			handler.openIframe(data.access_code);
+			handler.openIframe();
 		} catch (err: any) {
 			setStatus('error');
 			setMessage(err.message);
@@ -91,14 +86,14 @@ export default function CheckoutPage() {
 	};
 	
 	return (
-		<div className="min-h-screen bg-gray-900 flex items-center justify-center">
+		<div className="min-h-screen relative bg-gray-900 flex items-center justify-center overflow-hidden">
 			<Header />
 			<Slash />
+			<Script src="https://js.paystack.co/v2/inline.js" strategy="afterInteractive" />
 			<div className="flex items-center justify-center px-4 z-10">
-				<Script src="https://js.paystack.co/v2/inline.js" strategy="afterInteractive" />
-				<div className="flex flex-col gap-10 w-full px-8 py-20 shadow rounded-md backdrop-blur-3xl bg-white/10">
+				<div className="relative flex flex-col items-center justify-evenly h-100 w-full md:w-150 mx-5 px-5 py-5 mt-10 -mx-auto rounded-xl border border-gray-200 text-center backdrop-blur-3xl">
 					<h2 className="text-xl font-bold mb-4 text-blue-200">Checkout – One‐Time Payment</h2>
-					<form onSubmit={handleSubmit} className="space-y-4">
+					<form onSubmit={handleSubmit} className="space-y-4 w-full">
 						<div>
 							<label htmlFor="email" className="block text-sm font-medium text-gray-200">
 								Email Address
@@ -118,7 +113,7 @@ export default function CheckoutPage() {
 								Amount: <strong>₦{amountParam}</strong>
 							</p>
 						</div>
-						<Button type="submit" disabled={status === 'pending'}>
+						<Button type="submit" disabled={status === 'pending'} className={`cursor-pointer bg-blue-500 hover:bg-blue-600 px-10 py-1 rounded-md text-white }`}>
 							{status === 'pending' ? 'Processing...' : `Pay ₦${amountParam}`}
 						</Button>
 					</form>

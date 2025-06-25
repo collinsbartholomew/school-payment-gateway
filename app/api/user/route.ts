@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import prisma from '../../lib/prisma';
 
 export async function GET() {
+	
 	const token = (await cookies()).get('token')?.value;
 	if (!token) {
 		return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
@@ -11,6 +12,7 @@ export async function GET() {
 	
 	try {
 		const { id } = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+		
 		const user = await prisma.user.findUnique({
 			where: { id },
 			include: { payments: true, subscriptions: true },

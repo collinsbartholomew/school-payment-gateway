@@ -17,7 +17,7 @@ export default async function PaymentFormPage() {
 		});
 		if (!user) return redirect('/');
 		
-		return <PaymentForm user={user} />;
+		return <PaymentForm user={user}/>;
 	} catch (err) {
 		console.error('Auth error:', err);
 		return redirect('/');

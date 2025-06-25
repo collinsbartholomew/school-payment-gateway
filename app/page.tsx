@@ -13,7 +13,7 @@ export default function Home() {
 				<title>Paystack Checkout</title>
 			</Head>
 			
-			<main className="min-h-screen bg-gray-900 flex items-center justify-center">
+			<main className="min-h-screen relative bg-gray-900 flex items-center justify-center overflow-hidden">
 				<Header/>
 				<Slash/>
 				<HomePageForm/>

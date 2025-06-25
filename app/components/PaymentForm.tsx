@@ -11,7 +11,7 @@ type Props = {
 
 export default function PaymentForm({ user }: Props) {
 	return (
-		<main className="min-h-screen bg-gray-900 flex items-center justify-center">
+		<main className="min-h-screen relative overflow-hidden bg-gray-900 flex items-center justify-center">
 			<Header />
 			<Slash />
 			<PaymentPageForm user={user} />
