@@ -11,9 +11,9 @@ export interface Payment {
   reference: string;
   status: string;
   channel?: string | null | undefined;
-  paidAt?: string | null | undefined;
-  createdAt: string | Date;
-  updatedAt: string | Date;
+  paidAt?: string | Date | null | undefined;
+  createdAt: string | Date | null | undefined;
+  updatedAt: string | Date | null | undefined;
   remitaUserId?: string;
 }
 
@@ -24,10 +24,10 @@ export interface Subscription {
   subscriptionCode: string;
   status: string;
   nextPaymentDate?: string;
-  startedAt: string | Date;
-  endedAt?: string | Date;
-  createdAt: string | Date;
-  updatedAt: string | Date;
+  startedAt: string | Date | null | undefined;
+  endedAt?: string | Date | null | undefined;
+  createdAt: string | Date | null | undefined;
+  updatedAt: string | Date | null | undefined;
 }
 
 export interface User {
