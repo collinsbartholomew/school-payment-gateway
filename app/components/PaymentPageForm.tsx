@@ -23,7 +23,7 @@ export interface Subscription {
   planId: string;
   subscriptionCode: string;
   status: string;
-  nextPaymentDate?: string;
+  nextPaymentDate?: Date | string | null | undefined;
   startedAt: string | Date | null | undefined;
   endedAt?: string | Date | null | undefined;
   createdAt: string | Date | null | undefined;
