@@ -4,17 +4,45 @@ import React, { useState} from 'react'
 import Link from "next/link";
 
 
-type Props = {}
+type Payment = {
+	id: string;
+	amount: number;
+	reference: string;
+	status: string;
+	paidAt: string | null;
+	createdAt: string;
+};
 
-export   default function PaymentPageForm({}: Props){
+type Subscription = {
+	id: string;
+	planId: string;
+	subscriptionCode: string;
+	status: string;
+	nextPaymentDate: string | null;
+};
+
+type User = {
+	id: string;
+	firstName: string;
+	middleName: string;
+	lastName: string;
+	email: string;
+	phone: string;
+	class: string;
+	dateOfBirth: Date;
+	payments: Payment[];
+	subscriptions: Subscription[];
+};
+
+export   default function PaymentPageForm({user}: {user: User}){
 	const [formData, setFormData] = useState({
-		fullName: '',
-		studentId: '',
-		grade: '',
-		email: '',
-		phone: '',
-		dob: '',
-		session: '',
+		firstName: user.firstName,
+		middleName: user.middleName,
+		lastName: user.lastName,
+		email: user.email,
+		phone: user.phone,
+		class: user.class,
+		dateOfBirth: user.dateOfBirth,
 		consent: false,
 	});
 	
@@ -43,27 +71,36 @@ export   default function PaymentPageForm({}: Props){
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<input
 						type="text"
-						name="fullName"
-						placeholder="Full Name"
-						value={formData.fullName}
+						name="firstName"
+						placeholder="First Name"
+						value={formData.firstName}
 						onChange={handleChange}
 						required
 						className="input"
 					/>
 					<input
 						type="text"
-						name="studentId"
-						placeholder="Student ID / Matric Number"
-						value={formData.studentId}
+						name="middleName"
+						placeholder="Middle Name"
+						value={formData.middleName}
 						onChange={handleChange}
 						required
 						className="input"
 					/>
 					<input
 						type="text"
-						name="grade"
+						name="lastName"
+						placeholder="Last Name"
+						value={formData.lastName}
+						onChange={handleChange}
+						required
+						className="input"
+					/>
+					<input
+						type="text"
+						name="class"
 						placeholder="Class / Grade"
-						value={formData.grade}
+						value={formData.class}
 						onChange={handleChange}
 						required
 						className="input"
@@ -82,32 +119,6 @@ export   default function PaymentPageForm({}: Props){
 						name="phone"
 						placeholder="Phone Number"
 						value={formData.phone}
-						onChange={handleChange}
-						required
-						className="input"
-					/>
-					<input
-						type="date"
-						name="dob"
-						placeholder="Date of Birth"
-						value={formData.dob}
-						onChange={handleChange}
-						className="input"
-					/>
-					<input
-						type="text"
-						name="session"
-						placeholder="Academic Session (e.g. 2024/2025)"
-						value={formData.session}
-						onChange={handleChange}
-						required
-						className="input"
-					/>
-					<input
-						type="text"
-						name="term"
-						placeholder="Term (e.g. First Term)"
-						value={formData.term}
 						onChange={handleChange}
 						required
 						className="input"
@@ -175,6 +186,6 @@ export   default function PaymentPageForm({}: Props){
 				</Link>
 			</form>
 		</div>
-		
+	
 	)
 }

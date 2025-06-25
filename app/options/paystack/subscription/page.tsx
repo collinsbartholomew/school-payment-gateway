@@ -1,4 +1,4 @@
-// app/subscription/page.tsx
+// app/subscription/PaymentForm.tsx
 'use client'
 
 import { useState } from 'react';

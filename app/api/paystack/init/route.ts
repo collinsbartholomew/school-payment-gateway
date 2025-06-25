@@ -52,7 +52,6 @@ export async function POST(request: Request) {
 			data: {
 				userId: user.id,
 				amount: amount * 100,
-				currency,
 				reference,
 				status: 'pending',
 			},

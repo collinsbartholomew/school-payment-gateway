@@ -1,116 +1,130 @@
-// prisma/schema.prisma
-
 datasource db {
-   provider = "mongodb"
-   url      = env("MONGODB_URI")
+	provider = "mongodb"
+	url      = env("MONGODB_URI")
 }
 
 generator client {
-   provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 model User {
-   id                 String         @id @default(auto()) @map("_id") @db.ObjectId
-   firstName          String?
-   lastName           String?
-   email              String         @unique
-   phone              String?
-   paystackCustomerId String?
-   createdAt          DateTime       @default(now())
-   updatedAt          DateTime       @updatedAt
-   payments           Payment[]
-   subscriptions      Subscription[]
+	id            String         @id @default(auto()) @map("_id") @db.ObjectId
+	firstName     String
+	middleName    String
+	lastName      String
+	email         String         @unique
+	phone         String
+	class         String
+	term          String
+	dateOfBirth   DateTime
+	regNumber     String?        @unique
+	createdAt     DateTime       @default(now())
+	updatedAt     DateTime       @updatedAt
+	payments      Payment[]
+	subscriptions Subscription[]
+}
+
+model Session {
+	id          String   @id @default(auto()) @map("_id") @db.ObjectId
+	email       String
+	startDate   DateTime
+	endDate     DateTime
+	isActive    Boolean  @default(false)
+	createdAt   DateTime @default(now())
+	updatedAt   DateTime @updatedAt
+	createdById String   @db.ObjectId
 }
 
 model Payment {
-   id           String      @id @default(auto()) @map("_id") @db.ObjectId
-   user         User        @relation(fields: [userId], references: [id])
-   userId       String      @db.ObjectId
-   amount       Int
-   currency     String
-   reference    String      @unique
-   status       String
-   channel      String?
-   paidAt       DateTime?
-   createdAt    DateTime    @default(now())
-   updatedAt    DateTime    @updatedAt
-   RemitaUser   RemitaUser? @relation(fields: [remitaUserId], references: [id])
-   remitaUserId String?     @db.ObjectId
+	id        String    @id @default(auto()) @map("_id") @db.ObjectId
+	user      User      @relation(fields: [userId], references: [id])
+	userId    String    @db.ObjectId
+	amount    Int
+	reference String    @unique
+	status    String
+	channel   String?
+	paidAt    DateTime?
+	createdAt DateTime  @default(now())
+	updatedAt DateTime  @updatedAt
+
+	RemitaUser   RemitaUser? @relation(fields: [remitaUserId], references: [id])
+	remitaUserId String?     @db.ObjectId
 }
 
 model Plan {
-   id            String         @id @default(auto()) @map("_id") @db.ObjectId
-   name          String
-   planCode      String
-   amount        Int
-   interval      String
-   currency      String
-   invoiceLimit  Int            @default(0)
-   createdAt     DateTime       @default(now())
-   updatedAt     DateTime       @updatedAt
-   subscriptions Subscription[]
+	id           String   @id @default(auto()) @map("_id") @db.ObjectId
+	name         String
+	planCode     String
+	amount       Int
+	interval     String
+	currency     String
+	invoiceLimit Int      @default(0)
+	createdAt    DateTime @default(now())
+	updatedAt    DateTime @updatedAt
+
+	subscriptions Subscription[]
 }
 
 model Subscription {
-   id               String    @id @default(auto()) @map("_id") @db.ObjectId
-   user             User      @relation(fields: [userId], references: [id])
-   userId           String    @db.ObjectId
-   plan             Plan      @relation(fields: [planId], references: [id])
-   planId           String    @db.ObjectId
-   subscriptionCode String
-   status           String
-   nextPaymentDate  DateTime?
-   startedAt        DateTime  @default(now())
-   endedAt          DateTime?
-   createdAt        DateTime  @default(now())
-   updatedAt        DateTime  @updatedAt
+	id               String    @id @default(auto()) @map("_id") @db.ObjectId
+	user             User      @relation(fields: [userId], references: [id])
+	userId           String    @db.ObjectId
+	plan             Plan      @relation(fields: [planId], references: [id])
+	planId           String    @db.ObjectId
+	subscriptionCode String
+	status           String
+	nextPaymentDate  DateTime?
+	startedAt        DateTime  @default(now())
+	endedAt          DateTime?
+	createdAt        DateTime  @default(now())
+	updatedAt        DateTime  @updatedAt
 }
 
 model RemitaUser {
-   id             String          @id @default(auto()) @map("_id") @db.ObjectId
-   firstName      String?
-   lastName       String?
-   email          String          @unique
-   phone          String?
-   remitaCustomer String? // Remita customer RRR or mandate ref
-   createdAt      DateTime        @default(now())
-   updatedAt      DateTime        @updatedAt
-   payments       Payment[]
-   mandates       RemitaMandate[]
-   RemitaPayment  RemitaPayment[]
+	id             String          @id @default(auto()) @map("_id") @db.ObjectId
+	firstName      String?
+	lastName       String?
+	email          String          @unique
+	phone          String?
+	remitaCustomer String? // Remita customer RRR or mandate ref
+	createdAt      DateTime        @default(now())
+	updatedAt      DateTime        @updatedAt
+	payments       Payment[]
+	mandates       RemitaMandate[]
+	RemitaPayment  RemitaPayment[]
 }
 
 model RemitaPayment {
-   id        String     @id @default(auto()) @map("_id") @db.ObjectId
-   user      RemitaUser @relation(fields: [userId], references: [id])
-   userId    String     @db.ObjectId
-   rrr       String     @unique
-   status    String
-   amount    Float
-   currency  String
-   debitDate DateTime?
-   createdAt DateTime   @default(now())
-   updatedAt DateTime   @updatedAt
+	id        String     @id @default(auto()) @map("_id") @db.ObjectId
+	user      RemitaUser @relation(fields: [userId], references: [id])
+	userId    String     @db.ObjectId
+	rrr       String     @unique
+	status    String
+	amount    Float
+	currency  String
+	debitDate DateTime?
+	createdAt DateTime   @default(now())
+	updatedAt DateTime   @updatedAt
 }
 
 model RemitaMandate {
-   id            String     @id @default(auto()) @map("_id") @db.ObjectId
-   user          RemitaUser @relation(fields: [userId], references: [id])
-   userId        String     @db.ObjectId
-   mandateRef    String     @unique
-   status        String
-   amount        Float
-   frequency     String // DAILY, WEEKLY, MONTHLY
-   startDate     DateTime
-   nextDebitDate DateTime?
-   createdAt     DateTime   @default(now())
-   updatedAt     DateTime   @updatedAt
+	id            String     @id @default(auto()) @map("_id") @db.ObjectId
+	user          RemitaUser @relation(fields: [userId], references: [id])
+	userId        String     @db.ObjectId
+	mandateRef    String     @unique
+	status        String
+	amount        Float
+	frequency     String // DAILY, WEEKLY, MONTHLY
+	startDate     DateTime
+	nextDebitDate DateTime?
+	createdAt     DateTime   @default(now())
+	updatedAt     DateTime   @updatedAt
 }
 
 model RemitaSplitArrangement {
-   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-   name        String
-   arrangement String   @unique
-   createdAt   DateTime @default(now())
-   updatedAt   DateTime @updatedAt
+	id          String   @id @default(auto()) @map("_id") @db.ObjectId
+	name        String
+	arrangement String   @unique
+	createdAt   DateTime @default(now())
+	updatedAt   DateTime @updatedAt
 }
