@@ -78,6 +78,7 @@ export default function CheckoutClient() {
       });
 
       handler.openIframe();
+      router.push('/');
     } catch (err: any) {
       setStatus("error");
       setMessage(err.message);
