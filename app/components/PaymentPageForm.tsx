@@ -39,7 +39,8 @@ export interface User {
   phone: string;
   class: string;
   term: string;
-  dateOfBirth: string;
+  // dateOfBirth can be a Date object or ISO string
+  dateOfBirth: string | Date;
   regNumber?: string;
   createdAt: string;
   updatedAt: string;
