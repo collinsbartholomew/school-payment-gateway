@@ -14,7 +14,7 @@ export interface Payment {
   paidAt?: string | Date | null | undefined;
   createdAt: string | Date | null | undefined;
   updatedAt: string | Date | null | undefined;
-  remitaUserId?: string;
+  remitaUserId?: string | null | undefined;
 }
 
 export interface Subscription {
