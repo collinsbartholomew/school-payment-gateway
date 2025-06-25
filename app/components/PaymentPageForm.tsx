@@ -40,12 +40,12 @@ export interface User {
   class: string;
   term: string;
   // dateOfBirth can be a Date object or ISO string
-  dateOfBirth: string | Date;
-  regNumber?: string | undefined;
-  createdAt: string | Date;
-  updatedAt: string | Date;
-  payments: Payment[] | undefined;
-  subscriptions: Subscription[] | undefined;
+  dateOfBirth: string | Date | null | undefined;
+  regNumber?: string | null;
+  createdAt: string | Date | null | undefined;
+  updatedAt: string | Date | null | undefined;
+  payments: Payment[] | undefined | null;
+  subscriptions: Subscription[] | undefined | null;
 }
 
 // ----- PaymentForm Component -----
