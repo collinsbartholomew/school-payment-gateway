@@ -10,8 +10,8 @@ export interface Payment {
   amount: number;
   reference: string;
   status: string;
-  channel?: string;
-  paidAt?: string;
+  channel?: string | null | undefined;
+  paidAt?: string | null | undefined;
   createdAt: string | Date;
   updatedAt: string | Date;
   remitaUserId?: string;
