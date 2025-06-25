@@ -12,8 +12,8 @@ export interface Payment {
   status: string;
   channel?: string;
   paidAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string | date;
+  updatedAt: string | date;
   remitaUserId?: string;
 }
 
@@ -24,10 +24,10 @@ export interface Subscription {
   subscriptionCode: string;
   status: string;
   nextPaymentDate?: string;
-  startedAt: string;
-  endedAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  startedAt: string | date;
+  endedAt?: string | date;
+  createdAt: string | date;
+  updatedAt: string | date;
 }
 
 export interface User {
@@ -41,9 +41,9 @@ export interface User {
   term: string;
   // dateOfBirth can be a Date object or ISO string
   dateOfBirth: string | Date;
-  regNumber?: string;
-  createdAt: string;
-  updatedAt: string;
+  regNumber?: string | undefined;
+  createdAt: string | date;
+  updatedAt: string | date;
   payments: Payment[];
   subscriptions: Subscription[];
 }
