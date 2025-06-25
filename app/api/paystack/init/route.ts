@@ -22,9 +22,9 @@ export async function POST(request: Request) {
 		
 		let user = await prisma.user.findUnique({ where: { email } });
 		
-		if (!user) {
-			user = await prisma.user.create({ data: { email } });
-		}
+		
+		if (!user) throw new Error('invlaid user')
+		
 		
 		const paystackRes = await fetch('https://api.paystack.co/transaction/initialize', {
 			method: 'POST',
@@ -48,16 +48,16 @@ export async function POST(request: Request) {
 		
 		const { authorization_url, reference, access_code } = paystackData.data
 		
-		await prisma.payment.create({
-			data: {
-				userId: user.id,
-				amount: amount * 100,
-				reference,
-				status: 'pending',
-			},
-		});
+		// await prisma.payment.create({
+		// 	data: {
+		// 		userId: user.id,
+		// 		amount: amount * 100,
+		// 		reference,
+		// 		status: 'pending',
+		// 	},
+		// });
 		
-		logger.info(`Initialized transaction for user ${user.id}, reference ${reference}`)
+		// logger.info(`Initialized transaction for user ${user.id}, reference ${reference}`)
 		
 		return NextResponse.json({ authorization_url, reference, access_code });
 		

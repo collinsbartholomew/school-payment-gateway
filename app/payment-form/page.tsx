@@ -5,6 +5,7 @@ import prisma from '../lib/prisma';
 import PaymentForm from '../components/PaymentForm';
 
 export default async function PaymentFormPage() {
+	
 	const token = (await cookies()).get('token')?.value;
 	if (!token) return redirect('/');
 	
