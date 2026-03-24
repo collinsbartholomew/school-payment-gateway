@@ -83,6 +83,12 @@ export default function PaymentForm({ user }: { user: User }) {
     e.preventDefault();
     setError('');
 
+    // Validate consent
+    if (!formData.consent) {
+      setError('You must confirm that the information is accurate.');
+      return;
+    }
+
     const totalAmount = Object.entries(feeAmounts).reduce((sum, [key, val]) => {
       return formData[key] ? sum + val : sum;
     }, 0);
@@ -98,35 +104,39 @@ export default function PaymentForm({ user }: { user: User }) {
 
   return (
     <div className="z-10 relative self-center min-h-130 h-[80vh] w-full md:w-200 mx-5 px-5 py-5 mt-10 -mx-auto rounded-xl border border-gray-200 items-center justify-center overflow-y-scroll text-center backdrop-blur-3xl">
-      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto py-6 bg-blue/50 rounded-2xl space-y-6">
+      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto py-6 bg-blue/50 rounded-2xl space-y-6" aria-label="Payment form">
         <h2 className="text-2xl font-semibold text-gray-300">Student Verification</h2>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" aria-live="assertive">
             <span className="block sm:inline">{error}</span>
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {['firstName','middleName','lastName','class','term','email','phone','dateOfBirth'].map(field => (
-            <input
-              key={field}
-              type={field === 'email' ? 'email' : 'text'}
-              name={field}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-              value={formData[field]}
-              readOnly
-              disabled
-              className="input cursor-not-allowed"
-            />
-          ))}
-        </div>
+        <fieldset>
+          <legend className="sr-only">Student Information</legend>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {['firstName','middleName','lastName','class','term','email','phone','dateOfBirth'].map(field => (
+              <input
+                key={field}
+                type={field === 'email' ? 'email' : field === 'dateOfBirth' ? 'text' : 'text'}
+                name={field}
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={formData[field]}
+                readOnly
+                disabled
+                className="input cursor-not-allowed"
+                aria-label={field.replace(/([A-Z])/g, ' $1').trim()}
+              />
+            ))}
+          </div>
+        </fieldset>
 
-        <div>
-          <h3 className="font-bold text-white py-3 text-xl">Payment Options</h3>
+        <fieldset>
+          <legend className="font-bold text-white py-3 text-xl">Payment Options</legend>
           <div className="flex flex-col gap-3">
             {Object.entries(feeAmounts).map(([id, amount]) => (
-              <label key={id} htmlFor={id} className="flex cursor-pointer hover:bg-blue-900/30 gap-2 relative w-full items-center justify-start border rounded-full px-5 border-gray-300">
+              <label key={id} htmlFor={id} className="flex cursor-pointer hover:bg-blue-900/30 gap-2 relative w-full items-center justify-start border rounded-full px-5 border-gray-300 transition-colors">
                 <input
                   type="checkbox"
                   name={id}
@@ -134,6 +144,7 @@ export default function PaymentForm({ user }: { user: User }) {
                   checked={!!formData[id]}
                   onChange={handleChange}
                   className="peer"
+                  aria-label={`${id.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} - ₦${amount.toLocaleString()}`}
                 />
                 <span className="ml-2 text-blue-200 font-medium">
                   {id.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -144,7 +155,7 @@ export default function PaymentForm({ user }: { user: User }) {
               </label>
             ))}
           </div>
-        </div>
+        </fieldset>
 
         <label htmlFor="consent" className="flex items-center justify-center w-full">
           <input
@@ -155,11 +166,17 @@ export default function PaymentForm({ user }: { user: User }) {
             onChange={handleChange}
             required
             className="mr-2"
+            aria-required="true"
+            aria-label="Confirm information accuracy"
           />
           <span className="text-sm text-gray-400">I confirm the above information is accurate.</span>
         </label>
 
-        <button type="submit" className="py-1 px-8 bg-blue-700 text-blue-300 font-bold rounded-xl hover:bg-blue-800 transition">
+        <button 
+          type="submit" 
+          className="py-1 px-8 bg-blue-700 text-blue-300 font-bold rounded-xl hover:bg-blue-800 transition disabled:opacity-60"
+          aria-label="Proceed to payment"
+        >
           Proceed to Payment
         </button>
       </form>

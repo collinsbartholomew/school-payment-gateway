@@ -56,19 +56,28 @@ export default function CheckoutClient() {
         currency: "NGN",
         reference: data.reference,
         onSuccess: async (response: any) => {
-          const verifyRes = await fetch("/api/paystack/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reference: response.reference }),
-          });
-          const verifyData = await verifyRes.json();
+          try {
+            const verifyRes = await fetch("/api/paystack/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ reference: response.reference }),
+            });
+            const verifyData = await verifyRes.json();
 
-          if (verifyData.status === "success") {
-            setStatus("success");
-            setMessage("Payment successful! Reference: " + response.reference);
-          } else {
+            if (verifyData.status === "success") {
+              setStatus("success");
+              setMessage("Payment successful! Reference: " + response.reference);
+              // Redirect after a short delay to allow user to see success message
+              setTimeout(() => {
+                router.push("/");
+              }, 2000);
+            } else {
+              setStatus("error");
+              setMessage("Payment verification failed: " + (verifyData.message || "Unknown error"));
+            }
+          } catch (verifyErr: any) {
             setStatus("error");
-            setMessage("Payment verification failed.");
+            setMessage("Verification error: " + verifyErr.message);
           }
         },
         onClose: () => {
@@ -78,7 +87,6 @@ export default function CheckoutClient() {
       });
 
       handler.openIframe();
-      router.push('/');
     } catch (err: any) {
       setStatus("error");
       setMessage(err.message);
