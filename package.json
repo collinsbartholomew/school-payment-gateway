@@ -18,24 +18,24 @@
 		"date-fns": "4.1.0",
 		"jsonwebtoken": "9.0.2",
 		"mongodb": "6.17.0",
-		"next": "15.3.4",
+		"next": "16.2.1",
 		"node-fetch": "3.3.2",
 		"prisma": "6.10.1",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
 		"react-icons": "5.5.0",
 		"uuid": "11.1.0",
 		"winston": "3.17.0",
 		"zod": "3.25.67"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.40.0",
-		"@tailwindcss/postcss": "^4",
+		"@playwright/test": "^1.58.2",
+		"@tailwindcss/postcss": "^4.2.2",
 		"@types/jsonwebtoken": "9.0.10",
-		"@types/node": "^20",
-		"@types/react": "^19",
-		"@types/react-dom": "^19",
-		"tailwindcss": "^4",
-		"typescript": "^5"
+		"@types/node": "^20.19.37",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"tailwindcss": "^4.2.2",
+		"typescript": "^5.9.3"
 	}
 }
